@@ -79,11 +79,11 @@ def bounce(request):
         tz_offset = int(tz.split(":", 1)[0])
         tz = timezone("Etc/GMT%s%d" % ("+" if tz_offset >= 0 else "-", tz_offset))
         bounced_at = tz.localize(datetime.strptime(timestamp[:26], POSTMARK_DATETIME_STRING)).astimezone(pytz.utc)
-            
+
         em = get_object_or_404(EmailMessage, message_id=bounce_dict["MessageID"], to=bounce_dict["Email"])
         eb, created = EmailBounce.objects.get_or_create(
             id=bounce_dict["ID"],
-            default={
+            defaults={
                 "message": em,
                 "type": bounce_dict["Type"],
                 "description": bounce_dict["Description"],
