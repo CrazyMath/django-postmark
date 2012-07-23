@@ -41,15 +41,15 @@ BOUNCE_TYPES = (
 class EmailMessage(models.Model):
     message_id = models.CharField(_("Message ID"), max_length=40)
     submitted_at = models.DateTimeField(_("Submitted At"))
-    status = models.CharField(_("Status"), max_length=150)
+    status = models.CharField(_("Status"), max_length=250)
     
-    to = models.CharField(_("To"), max_length=150)
+    to = models.CharField(_("To"), max_length=250)
     to_type = models.CharField(_("Type"), max_length=3, choices=TO_CHOICES)
     
-    sender = models.CharField(_("Sender"), max_length=150)
-    reply_to = models.CharField(_("Reply To"), max_length=150)
-    subject = models.CharField(_("Subject"), max_length=150)
-    tag = models.CharField(_("Tag"), max_length=150)
+    sender = models.CharField(_("Sender"), max_length=250)
+    reply_to = models.CharField(_("Reply To"), max_length=250)
+    subject = models.CharField(_("Subject"), max_length=250)
+    tag = models.CharField(_("Tag"), max_length=250)
     text_body = models.TextField(_("Text Body"))
     html_body = models.TextField(_("HTML Body"))
     
@@ -105,20 +105,21 @@ def sent_message(sender, **kwargs):
 
         timestamp = parse(resp["SubmittedAt"])
         submitted_at = timestamp.strftime(POSTMARK_DATETIME_STRING)
-        
+
+        import ipdb; ipdb.set_trace()
         emsg = EmailMessage(
-            message_id=resp["MessageID"],
-            submitted_at=submitted_at,
-            status=resp["Message"],
-            to=recipient[0],
-            to_type=recipient[1],
-            sender=msg["From"],
-            reply_to=msg.get("ReplyTo", ""),
-            subject=msg["Subject"],
-            tag=msg.get("Tag", ""),
-            text_body=msg["TextBody"],
-            html_body=msg.get("HtmlBody", ""),
-            headers=msg.get("Headers", ""),
-            attachments=msg.get("Attachments", "")
+            message_id = resp["MessageID"],
+            submitted_at = submitted_at,
+            status = resp["Message"],
+            to = recipient[0],
+            to_type = recipient[1],
+            sender = msg["From"],
+            reply_to = msg.get("ReplyTo", ""),
+            subject = msg["Subject"],
+            tag = msg.get("Tag", ""),
+            text_body = msg["TextBody"],
+            html_body = msg.get("HtmlBody", ""),
+            headers = msg.get("Headers", ""),
+            attachments = msg.get("Attachments", "")
         )
         emsg.save()
