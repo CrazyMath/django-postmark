@@ -103,7 +103,7 @@ def sent_message(sender, **kwargs):
         if not recipient[0]:
             continue
 
-        timestamp = parse(bounce_dict["SubmittedAt"])
+        timestamp = parse(resp["SubmittedAt"])
         bounced_at = timestamp.strftime(POSTMARK_DATETIME_STRING)
         
         emsg = EmailMessage(
