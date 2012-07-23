@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from datetime import datetime
+from dateutil.parser import parse
 from pytz import timezone
 import pytz
 import base64
@@ -70,15 +71,9 @@ def bounce(request):
                 return HttpResponseForbidden()
         
         bounce_dict = json.loads(request.read())
-            
-        try:
-            timestamp, tz = bounce_dict["BouncedAt"].rsplit("+", 1)
-        except ValueError:
-            timestamp, tz = bounce_dict["BouncedAt"].rsplit("-", 1)
 
-        tz_offset = int(tz.split(":", 1)[0])
-        tz = timezone("Etc/GMT%s%d" % ("+" if tz_offset >= 0 else "-", tz_offset))
-        bounced_at = tz.localize(datetime.strptime(timestamp[:26], POSTMARK_DATETIME_STRING)).astimezone(pytz.utc)
+        timestamp = parse(bounce_dict["BouncedAt"])
+        bounced_at = timestamp.strftime(POSTMARK_DATETIME_STRING)
 
         em = get_object_or_404(EmailMessage, message_id=bounce_dict["MessageID"], to=bounce_dict["Email"])
         eb, created = EmailBounce.objects.get_or_create(
