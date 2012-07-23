@@ -104,7 +104,7 @@ def sent_message(sender, **kwargs):
             continue
 
         timestamp = parse(resp["SubmittedAt"])
-        bounced_at = timestamp.strftime(POSTMARK_DATETIME_STRING)
+        submitted_at = timestamp.strftime(POSTMARK_DATETIME_STRING)
         
         emsg = EmailMessage(
             message_id=resp["MessageID"],
