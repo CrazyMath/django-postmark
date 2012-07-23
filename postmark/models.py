@@ -102,7 +102,10 @@ def sent_message(sender, **kwargs):
         if not recipient[0]:
             continue
         
-        timestamp, tz = resp["SubmittedAt"].rsplit("+", 1)
+        try:
+            timestamp, tz = resp["SubmittedAt"].rsplit("+", 1)
+        except ValueError:
+            timestamp, tz = resp["SubmittedAt"].rsplit("-", 1)
         tz_offset = int(tz.split(":", 1)[0])
         tz = timezone("Etc/GMT%s%d" % ("+" if tz_offset >= 0 else "-", tz_offset))
         submitted_at = tz.localize(datetime.strptime(timestamp[:26], POSTMARK_DATETIME_STRING)).astimezone(pytz.utc)
