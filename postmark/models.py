@@ -106,7 +106,6 @@ def sent_message(sender, **kwargs):
         timestamp = parse(resp["SubmittedAt"])
         submitted_at = timestamp.strftime(POSTMARK_DATETIME_STRING)
 
-        import ipdb; ipdb.set_trace()
         emsg = EmailMessage(
             message_id = resp["MessageID"],
             submitted_at = submitted_at,
