@@ -81,7 +81,7 @@ def bounce(request):
             defaults={
                 "message": em,
                 "type": bounce_dict["Type"],
-                "description": bounce_dict["Description"],
+                #"description": bounce_dict["Description"],
                 "details": bounce_dict["Details"],
                 "inactive": bounce_dict["Inactive"],
                 "can_activate": bounce_dict["CanActivate"],
